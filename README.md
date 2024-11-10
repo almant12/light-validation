@@ -21,4 +21,4 @@ Use StringValidator to apply rules such as minimum/maximum length, regular expre
 - regex(pattern, error): Validates that the string matches a given regular expression.
 - email(error): Validates that the string is in email format.
 - trim(): Removes leading and trailing whitespace from the string.
-- validate(value): Runs all applied rules on the string and returns an object containing valid, errors, and data.
+- validate(value): Runs all applied rules on the string and returns either the validated data if all rules pass or an error if any rule fails.
