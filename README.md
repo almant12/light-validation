@@ -1,5 +1,6 @@
 # almantZod
-This project has just been created, and we plan to add more validation rules and features in the future to enhance its functionality. Stay tuned for updates!
+
+This npm package has just been created. In the future, we plan to add more validation rules and features to enhance its functionality. Stay tuned for updates!
 
 ##
 
