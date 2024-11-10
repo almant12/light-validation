@@ -7,4 +7,4 @@
 To install this package, use npm:
 
 ```bash
-npm install almantZod
+npm install almant-validation
