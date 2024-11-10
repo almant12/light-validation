@@ -62,4 +62,28 @@ console.log(result); // { valid: true, data: 10 }
 Use `object()` to validate complex objects based on a schema.
 ## Methods
 
-- safeParse(data): Validates the object against the schema and returns an object with success, errors, and data.
+- parseData(data): Validates the object against the schema and returns either an object data with success if all rules pass or an error if any rule fails.
+
+
+```javascript
+import almantZod from 'alamnt-validation'
+
+const userSchema = almantZod.object({
+  username: almantZod.string().min(3, { message: 'Username too short' }),
+  email: almantZod.string().email({ message: 'Please enter a valid email.'}),
+  password: almantZod.string().min(8, { message: 'Password must be at least 8 characters long.' })
+  .regex(/[a-zA-Z]/, { message: 'Password must contain at least one letter.' }),
+  age: almantZod.integer().min(18, { message: 'Must be at least 18' }),
+});
+
+const result = userSchema.safeParse({
+  username: "john",
+  email: "john@example.com",
+  password: "password1",
+  age: 20
+});
+
+console.log(result); 
+// Expected output:
+// { success: true, data: { username: "john", email: "john@example.com", password: "password1", age: 20 } }
+```
