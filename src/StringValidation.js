@@ -86,9 +86,11 @@ class StringValidator {
   validate(value) {
     let errors = [];
     let validData = value;
+    let isValid = true;
 
     if (typeof value !== 'string') {
       errors.push('Value must be a string.');
+      isValid = false;
       validData = null;
     } else {
       for (let rule of this.rules) {
@@ -96,6 +98,7 @@ class StringValidator {
 
         if (!result.valid) {
           errors.push(result.error);
+          isValid = false;
           validData = null;
         } else {
           validData = result.value;
@@ -103,7 +106,7 @@ class StringValidator {
       }
     }
 
-    return { valid: errors.length === 0, errors, data: validData };
+    return isValid ? {valid: true, data:validData} : {valid: false, errors}
   }
 }
 

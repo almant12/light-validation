@@ -61,9 +61,11 @@ class IntegerValidator {
   validate(value) {
     let errors = [];
     let validData = value;
+    let isValid = true;
 
     if (typeof value !== 'number' || !Number.isInteger(value)) {
       errors.push('Value must be an integer.');
+      isValid = false;
       validData = null;
     } else {
       for (let rule of this.rules) {
@@ -71,6 +73,7 @@ class IntegerValidator {
 
         if (!result.valid) {
           errors.push(result.error);
+          isValid = false;
           validData = null;
         } else {
           validData = result.value;
@@ -78,7 +81,7 @@ class IntegerValidator {
       }
     }
 
-    return { valid: errors.length === 0, errors, data: validData };
+    return isValid ? {valid: true, data: validData} : {valid: false, errors}
   }
 }
 

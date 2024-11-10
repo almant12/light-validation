@@ -7,7 +7,7 @@ class ObjectSchema {
    * Validates the provided data object against the schema.
    * @param {Object} data - The object to validate.
    * @returns {Object} - An object containing:
-   * - `success`: `true` if validation passed, `false` if any field failed.
+   * - `valid`: `true` if validation passed, `false` if any field failed.
    * - `errors`: Object with error messages for each invalid field.
    * - `data`: The validated data object or `null` if validation failed.
    */
@@ -39,7 +39,7 @@ class ObjectSchema {
       }
     }
 
-    return isValid ? { success: true, data: validData } : { success: false, errors };
+    return isValid ? { valid: true, data: validData } : { valid: false, errors };
   }
 }
 
