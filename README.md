@@ -22,3 +22,22 @@ Use StringValidator to apply rules such as minimum/maximum length, regular expre
 - email(error): Validates that the string is in email format.
 - trim(): Removes leading and trailing whitespace from the string.
 - validate(value): Runs all applied rules on the string and returns either the validated data if all rules pass or an error if any rule fails.
+
+```javascript
+const { StringValidator } = require('almantZod');
+
+const validator = new StringValidator()
+  .min(5, 'String must be at least 5 characters long')
+  .max(50, 'String cannot exceed 50 characters')
+  .regex(/^[a-zA-Z0-9]*$/, 'String must only contain alphanumeric characters')
+  .email('Invalid email format')
+  .trim();
+
+const result = validator.validate(' test@example.com ');
+
+console.log(result);
+// Output:
+// {
+//   data: 'test@example.com',
+//   error: null
+// }
