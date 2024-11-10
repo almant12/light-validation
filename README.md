@@ -80,7 +80,7 @@ const userSchema = almantZod.object({
   age: almantZod.integer().min(18, { message: 'Must be at least 18' }),
 });
 
-const result = userSchema.safeParse({
+const result = userSchema.parseData({
   username: "john",
   email: "john@example.com",
   password: "password1",
