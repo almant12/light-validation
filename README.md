@@ -72,7 +72,7 @@ const userSchema = almantZod.object({
   username: almantZod.string().min(3, { message: 'Username too short' }),
   email: almantZod.string().email({ message: 'Please enter a valid email.'}),
   password: almantZod.string().min(8, { message: 'Password must be at least 8 characters long.' })
-  .regex(/[a-zA-Z]/, { message: 'Password must contain at least one letter.' }),
+ .regex(/[0-9]/, { message: 'Password must contain at least one number.' }),
   age: almantZod.integer().min(18, { message: 'Must be at least 18' }),
 });
 
