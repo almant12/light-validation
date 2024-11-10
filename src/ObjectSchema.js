@@ -11,7 +11,7 @@ class ObjectSchema {
    * - `errors`: Object with error messages for each invalid field.
    * - `data`: The validated data object or `null` if validation failed.
    */
-  safeParse(data) {
+  parseData(data) {
     const errors = {};
     const validData = {};
     let isValid = true;

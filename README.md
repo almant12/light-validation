@@ -56,3 +56,10 @@ const integerValidator = almantZod.integer()
 const result = integerValidator.validate(10);
 console.log(result); // { valid: true, data: 10 }
 ```
+
+## 3. ObjectSchema
+
+Use `object()` to validate complex objects based on a schema.
+## Methods
+
+- safeParse(data): Validates the object against the schema and returns an object with success, errors, and data.
