@@ -1,0 +1,18 @@
+{
+  "name": "almant-validation",
+  "version": "1.0.4",
+  "description": "is a validation package which helps to validate the fields from the request",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "validation",
+    "string",
+    "integer",
+    "schema"
+  ],
+  "author": "Almant",
+  "license": "MIT",
+  "dependencies": {}
+}
