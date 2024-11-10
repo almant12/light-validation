@@ -24,20 +24,13 @@ Use StringValidator to apply rules such as minimum/maximum length, regular expre
 - validate(value): Runs all applied rules on the string and returns either the validated data if all rules pass or an error if any rule fails.
 
 ```javascript
-const { StringValidator } = require('almantZod');
+import almantZod from 'alamnt-validation'
 
-const validator = new StringValidator()
-  .min(5, 'String must be at least 5 characters long')
-  .max(50, 'String cannot exceed 50 characters')
-  .regex(/^[a-zA-Z0-9]*$/, 'String must only contain alphanumeric characters')
-  .email('Invalid email format')
+const stringValidator = almantZod.string()
+  .min(5, { message: 'Too short!' })
+  .max(10, { message: 'Too long!' })
+  .email({ message: 'Invalid email format' })
   .trim();
 
-const result = validator.validate(' test@example.com ');
-
-console.log(result);
-// Output:
-// {
-//   data: 'test@example.com',
-//   error: null
-// }
+const result = stringValidator.validate(" example@example.com ");
+console.log(result); // { valid: true, data: "example@example.com" }
