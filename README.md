@@ -22,8 +22,6 @@ Use `string()` to apply rules such as minimum/maximum length, regular expression
 
 - min(length, error): Validates that the string length is at least length characters.
 - max(length, error): Validates that the string length is at most length characters.
-- regex(pattern, error): Validates that the string matches a given regular expression.
-- email(error): Validates that the string is in email format.
 - trim(): Removes leading and trailing whitespace from the string.
 - validate(value): Runs all applied rules on the string and returns either the validated data if all rules pass or an error if any rule fails.
 
@@ -33,7 +31,6 @@ import almantZod from 'alamnt-validation'
 const stringValidator = almantZod.string()
   .min(5, { message: 'Too short!' })
   .max(10, { message: 'Too long!' })
-  .email({ message: 'Invalid email format' })
   .trim();
 
 const result = stringValidator.validate(" example@example.com ");
