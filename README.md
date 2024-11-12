@@ -4,7 +4,7 @@ This npm package has just been created. In the future, we plan to add more valid
 
 ##
 
-`almantZod` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, and object schemas. Use `StringValidator`, `IntegerValidator`, and `ObjectSchema` to perform custom validations on your data, with easy-to-read error messages.
+`almantZod` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, email, password and object schemas. Use `StringValidator`, `IntegerValidator`, `EmailValidator`, `PasswordValidator` and `ObjectSchema` to perform custom validations on your data, with easy-to-read error messages.
 
 ## Installation
 
