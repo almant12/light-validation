@@ -1,18 +1,25 @@
+/**
+ * Class for validating strings with customizable rules for minimum and maximum length.
+ * Includes error handling with default or custom messages.
+ */
 class StringValidator {
   constructor() {
     this.rules = [];
   }
 
   /**
-   * Ensures the string length is at least `length` characters.
-   * @param {number} length - Minimum length of the string.
-   * @param {Object} error - Custom error message.
+   * Adds a rule to ensure the string has at least `length` characters.
+   * @param {number} length - The minimum number of characters required.
+   * @param {Object} [options] - Optional parameters.
+   * @param {string} [options.message] - Custom error message.
    * @returns {StringValidator} - The `StringValidator` instance with the `min` rule applied.
+   *
    */
-  min(length, error) {
+  min(length, options = {}) {
+    const message = `Value must be at least ${length} characters long.`;
     this.rules.push((value) => {
-      if (typeof value !== 'string' || value.length < length) {
-        return { valid: false, error: error.message }; 
+      if (value.length < length) {
+        return { valid: false, error: options.message || message }; 
       }
       return { valid: true, value };
     });
@@ -20,15 +27,18 @@ class StringValidator {
   }
 
   /**
-   * Ensures the string length is at most `length` characters.
-   * @param {number} length - Maximum length of the string.
-   * @param {Object} error - Custom error message.
+   * Adds a rule to ensure the string has no more than `length` characters.
+   * @param {number} length - The maximum number of characters allowed.
+   * @param {Object} [options] - Optional parameters.
+   * @param {string} [options.message] - Custom error message.
    * @returns {StringValidator} - The `StringValidator` instance with the `max` rule applied.
+   *
    */
-  max(length, error) {
+  max(length, options = {}) {
+    const message = `Value must be no more than ${length} characters long.`;
     this.rules.push((value) => {
-      if (typeof value !== 'string' || value.length > length) {
-        return { valid: false, error: error.message }; 
+      if (value.length > length) {
+        return { valid: false, error: options.message || message }; 
       }
       return { valid: true, value };
     });
@@ -36,26 +46,14 @@ class StringValidator {
   }
 
   /**
-   * Removes leading and trailing spaces from the string.
-   * @returns {StringValidator} - The `StringValidator` instance with the `trim` rule applied.
-   */
-  trim() {
-    this.rules.push((value) => {
-      if (typeof value === 'string') {
-        return { valid: true, value: value.trim() };
-      }
-      return { valid: false, error: 'Value must be a string.' };
-    });
-    return this;
-  }
-
-  /**
-   * Validates the provided string value against all applied rules.
+   * Validates the provided string against all applied rules.
+   * Checks if the string satisfies each rule in `rules`, collecting errors if any.
    * @param {string} value - The string to validate.
-   * @returns {Object} - An object containing:
-   * - `valid`: `true` if validation passed, `false` if any rule failed.
-   * - `errors`: Array of error messages.
-   * - `data`: The validated data or `null` if validation failed.
+   * @returns {Object} - Validation result:
+   *   - `valid` (`boolean`): True if all rules pass, otherwise false.
+   *   - `errors` (`string[]`): An array of error messages, if validation fails.
+   *   - `data` (`string|null`): The validated string if valid, otherwise null.
+   *
    */
   validate(value) {
     let errors = [];
@@ -68,7 +66,7 @@ class StringValidator {
       validData = null;
     } else {
       for (let rule of this.rules) {
-        const result = rule(value);
+        const result = rule(value.trim());
 
         if (!result.valid) {
           errors.push(result.error);
@@ -80,9 +78,8 @@ class StringValidator {
       }
     }
 
-    return isValid ? {valid: true, data:validData} : {valid: false, errors}
+    return isValid ? { valid: true, data: validData } : { valid: false, errors };
   }
 }
-
 
 module.exports = StringValidator;  // Ensure you export the class
