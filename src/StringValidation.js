@@ -36,32 +36,6 @@ class StringValidator {
   }
 
   /**
-   * Validates the string using a regular expression.
-   * @param {RegExp} pattern - Regular expression pattern to match the string.
-   * @param {Object} error - Custom error message.
-   * @returns {StringValidator} - The `StringValidator` instance with the `regex` rule applied.
-   */
-  regex(pattern, error) {
-    this.rules.push((value) => {
-      if (typeof value === 'string' && !pattern.test(value)) {
-        return { valid: false, error: error.message };
-      }
-      return { valid: true, value };
-    });
-    return this;
-  }
-
-  /**
-   * Validates the string as an email format using a regular expression.
-   * @param {Object} error - Custom error message.
-   * @returns {StringValidator} - The `StringValidator` instance with the `email` rule applied (internally calls `regex`).
-   */
-  email(error) {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return this.regex(emailPattern, error); 
-  }
-
-  /**
    * Removes leading and trailing spaces from the string.
    * @returns {StringValidator} - The `StringValidator` instance with the `trim` rule applied.
    */

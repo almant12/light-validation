@@ -1,37 +1,70 @@
 class EmailValidator {
 
-    #regex(pattern,value) {
-        // Adds a regex rule to the list of validation rules
-            if (!pattern.test(value)) {
-                return { valid: false, error: "email must be valid" };
-            }
-            return { valid: true, data: value }; // Use 'data' to return the validated value
+
+
+    constructor() {
+        this.rules = []; // Store validation rules
     }
 
+    // Adds a regex rule to the list of validation rules
+    #regex(pattern, value) {
+        if (!pattern.test(value)) {
+            return { valid: false, error: "Email must be valid." };
+        }
+        return { valid: true, data: value };
+    }
+
+    // Email regex pattern
     #email(value) {
-        // Updated email regex to properly match valid emails
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return this.#regex(emailPattern,value);
+        return this.#regex(emailPattern, value);
     }
 
+    // Adds a min length rule to the list of validation rules
+    max(length, options = {}) {
+        this.rules.push((value) => {
+            if (value.length > length) {
+                return { valid: false, error: options.message || `Email must be at least ${length} characters long.` };
+            }
+            return { valid: true, data: value };
+        });
+        return this; // Allow chaining
+    }
+
+    // Validate function to process all rules
     validate(value) {
         let errors = [];
-        let validData = value; // Initialize with the original value
+        let validData = value;
         let isValid = true;
-
-        // check the value to email function
-        const emailValidation = this.#email(value)
 
         if (typeof value !== 'string') {
             errors.push('Value must be a string.');
             isValid = false;
             validData = null;
-        } else if (!emailValidation.valid){
-            errors.push(emailValidation.error);
-            isValid = false;
-            validData = null; // If invalid, reset validData
         } else {
-            validData = emailValidation.data; // Update validData with the result from the rule
+        
+            const emailValidation = this.#email(value);
+
+            if (!emailValidation.valid) {
+                errors.push(emailValidation.error);
+                isValid = false;
+                validData = null;
+            } else {
+                validData = emailValidation.data;
+            }
+
+             // Apply all rules in the `rules` array, including max
+             for (let rule of this.rules) {
+                const result = rule(value);
+
+                if (!result.valid) {
+                    errors.push(result.error);
+                    isValid = false;
+                    validData = null; // Reset validData if invalid
+                } else {
+                    validData = result.data; // Update validData if valid
+                }
+            }
         }
 
         return isValid ? { valid: true, data: validData } : { valid: false, errors };
