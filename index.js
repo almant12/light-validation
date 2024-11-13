@@ -5,7 +5,7 @@ const EmailValidator = require('./src/emailValidator');
 const PasswordValidator = require('./src/PasswordValidator')
 
 const almantZod = {
-  email: () => new EmailValidator(),
+  email: (options) => new EmailValidator(options),
   password: () => new PasswordValidator(),
   string: () => new StringValidator(),
   integer: () => new IntegerValidator(),

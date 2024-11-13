@@ -4,7 +4,9 @@
  */
 class EmailValidator {
 
-    constructor() {
+    constructor(options = {}) {
+      const errorMessage = 'Email must be valid';
+      this.message = options.message || errorMessage;
       this.rules = []; // Array to store validation rules
     }
   
@@ -17,7 +19,7 @@ class EmailValidator {
      */
     #regex(pattern, value, errorMessage) {
       if (!pattern.test(value)) {
-        return { valid: false, error: errorMessage || 'Invalid email format.' };
+        return { valid: false, error: errorMessage };
       }
       return { valid: true, data: value };
     }
@@ -74,7 +76,7 @@ class EmailValidator {
         validData = null;
       } else {
         // Apply email format validation
-        const emailValidation = this.#email(value);
+        const emailValidation = this.#email(value,this.message);
         if (!emailValidation.valid) {
           errors.push(emailValidation.error);
           isValid = false;
