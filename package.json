@@ -1,6 +1,6 @@
 {
   "name": "almant-validation",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "is a validation package which helps to validate the fields from the request",
   "main": "index.js",
   "scripts": {
