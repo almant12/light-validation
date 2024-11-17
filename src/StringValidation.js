@@ -60,11 +60,17 @@ class StringValidator {
     let validData = value;
     let isValid = true;
 
-    if (typeof value !== 'string') {
+    if(value.length === 0){
+      errors.push('Value is required')
+      isValid = false;
+      validData = null;
+
+    }else if (typeof value !== 'string') {
       errors.push('Value must be a string.');
       isValid = false;
       validData = null;
-    } else {
+      
+    }else {
       for (let rule of this.rules) {
         const result = rule(value.trim());
 
