@@ -69,11 +69,17 @@ class EmailValidator {
       let validData = value;
       let isValid = true;
   
+      if(value == null || value.length === 0){
+        errors.push('Value is required')
+        isValid = false;
+        validData = null;
+  
       // Ensure the value is a string
-      if (typeof value !== 'string') {
+      }else if (typeof value !== 'string') {
         errors.push('Value must be a string.');
         isValid = false;
         validData = null;
+        
       } else {
         // Apply email format validation
         const emailValidation = this.#email(value,this.message);

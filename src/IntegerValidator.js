@@ -66,10 +66,16 @@ class IntegerValidator {
     let validData = value;
     let isValid = true;
 
-    if (typeof value !== 'number' || !Number.isInteger(value)) {
-      errors.push('Value must be an integer.');
+    if(value == null || value.length === 0){
+      errors.push('Value is required')
       isValid = false;
       validData = null;
+
+    }else if (typeof value !== 'string') {
+      errors.push('Value must be a string.');
+      isValid = false;
+      validData = null;
+      
     } else {
       for (let rule of this.rules) {
         const result = rule(value);

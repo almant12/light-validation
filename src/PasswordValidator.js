@@ -53,7 +53,7 @@ class PasswordValidator{
         let validData = value;
         let isValid = true;
     
-        if(value.length === 0){
+        if(value == null || value.length === 0){
             errors.push('Value is required')
             isValid = false;
             validData = null;

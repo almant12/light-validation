@@ -60,7 +60,7 @@ class StringValidator {
     let validData = value;
     let isValid = true;
 
-    if(value.length === 0){
+    if(value == null || value.length === 0){
       errors.push('Value is required')
       isValid = false;
       validData = null;
@@ -69,6 +69,7 @@ class StringValidator {
       errors.push('Value must be a string.');
       isValid = false;
       validData = null;
+      
       
     }else {
       for (let rule of this.rules) {
