@@ -71,11 +71,11 @@ class IntegerValidator {
       isValid = false;
       validData = null;
 
-    }else if (typeof value !== 'string') {
-      errors.push('Value must be a string.');
-      isValid = false;
-      validData = null;
-      
+    }else if (typeof value !== 'number' || !Number.isInteger(value)) {
+        errors.push('Value must be an integer.');
+        isValid = false;
+        validData = null;
+        
     } else {
       for (let rule of this.rules) {
         const result = rule(value);
