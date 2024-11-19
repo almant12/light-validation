@@ -1,10 +1,20 @@
-/**
- * Class for validating strings with customizable rules for minimum and maximum length.
- * Includes error handling with default or custom messages.
- */
 class StringValidator {
+
+  #rules;
+  #allowNull;
+
   constructor() {
-    this.rules = [];
+    this.#rules = [];
+    this.#allowNull = false; // Flag to indicate if null values are allowed
+  }
+
+  /**
+   * Adds a rule to allow null or empty strings as valid inputs.
+   * @returns {StringValidator} - The `StringValidator` instance with the `nullable` rule applied.
+   */
+  nullable() {
+    this.#allowNull = true; // Enable nullable behavior
+    return this; // Return the instance for chaining
   }
 
   /**
@@ -13,13 +23,12 @@ class StringValidator {
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
    * @returns {StringValidator} - The `StringValidator` instance with the `min` rule applied.
-   *
    */
   min(length, options = {}) {
     const message = `Value must be at least ${length} characters long.`;
-    this.rules.push((value) => {
+    this.#rules.push((value) => {
       if (value.length < length) {
-        return { valid: false, error: options.message || message }; 
+        return { valid: false, error: options.message || message };
       }
       return { valid: true, value };
     });
@@ -32,13 +41,12 @@ class StringValidator {
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
    * @returns {StringValidator} - The `StringValidator` instance with the `max` rule applied.
-   *
    */
   max(length, options = {}) {
     const message = `Value must be no more than ${length} characters long.`;
-    this.rules.push((value) => {
+    this.#rules.push((value) => {
       if (value.length > length) {
-        return { valid: false, error: options.message || message }; 
+        return { valid: false, error: options.message || message };
       }
       return { valid: true, value };
     });
@@ -46,35 +54,33 @@ class StringValidator {
   }
 
   /**
-   * Validates the provided string against all applied rules.
-   * Checks if the string satisfies each rule in `rules`, collecting errors if any.
-   * @param {string} value - The string to validate.
+   * Validates the provided string against all applied #rules.
+   * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+   * @param {string|null} value - The string to validate.
    * @returns {Object} - Validation result:
-   *   - `valid` (`boolean`): True if all rules pass, otherwise false.
+   *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
    *   - `errors` (`string[]`): An array of error messages, if validation fails.
    *   - `data` (`string|null`): The validated string if valid, otherwise null.
-   *
    */
   validate(value) {
     let errors = [];
     let validData = value;
     let isValid = true;
 
-    if(value == null || value.length === 0){
-      errors.push('Value is required')
+    if (value == null || value.length === 0) {
+      if (this.#allowNull) {
+        return { valid: true, data: null }; // Pass validation for null/empty if nullable
+      }
+      errors.push('String is required');
       isValid = false;
       validData = null;
-
-    }else if (typeof value !== 'string') {
-      errors.push('Value must be a string.');
+    } else if (typeof value !== 'string') {
+      errors.push('Value must be a string');
       isValid = false;
       validData = null;
-      
-      
-    }else {
-      for (let rule of this.rules) {
+    } else {
+      for (let rule of this.#rules) {
         const result = rule(value.trim());
-
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;
@@ -89,4 +95,4 @@ class StringValidator {
   }
 }
 
-module.exports = StringValidator;  // Ensure you export the class
+module.exports = StringValidator;

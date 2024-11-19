@@ -1,6 +1,19 @@
 class IntegerValidator {
+  #rules;
+  #allowNull;
+
   constructor() {
-    this.rules = [];
+    this.#rules = [];
+    this.#allowNull = false; // Default is to not allow null
+  }
+
+  /**
+   * Allows the integer value to be `null`.
+   * @returns {IntegerValidator} - The `IntegerValidator` instance with the nullable flag enabled.
+   */
+  nullable() {
+    this.#allowNull = true;
+    return this;
   }
 
   /**
@@ -10,10 +23,10 @@ class IntegerValidator {
    * @returns {IntegerValidator} - The `IntegerValidator` instance with the `min` rule applied.
    */
   min(minValue, options = {}) {
-    const message = `Value must be greater than or equal to ${minValue}`
-    this.rules.push((value) => {
+    const message = `Value must be greater than or equal to ${minValue}`;
+    this.#rules.push((value) => {
       if (value < minValue) {
-        return { valid: false, error: options.message || message};
+        return { valid: false, error: options.message || message };
       }
       return { valid: true, value };
     });
@@ -27,8 +40,8 @@ class IntegerValidator {
    * @returns {IntegerValidator} - The `IntegerValidator` instance with the `max` rule applied.
    */
   max(maxValue, options = {}) {
-    const message = `Value must be less than or equal to ${maxValue}`
-    this.rules.push((value) => {
+    const message = `Value must be less than or equal to ${maxValue}`;
+    this.#rules.push((value) => {
       if (value > maxValue) {
         return { valid: false, error: options.message || message };
       }
@@ -44,7 +57,7 @@ class IntegerValidator {
    */
   positive(options = {}) {
     const message = 'Value must be a positive number';
-    this.rules.push((value) => {
+    this.#rules.push((value) => {
       if (value <= 0) {
         return { valid: false, error: options.message || message };
       }
@@ -55,7 +68,7 @@ class IntegerValidator {
 
   /**
    * Validates the provided integer value against all applied rules.
-   * @param {number} value - The integer to validate.
+   * @param {number|null} value - The integer to validate.
    * @returns {Object} - An object containing:
    * - `valid`: `true` if validation passed, `false` if any rule failed.
    * - `errors`: Array of error messages.
@@ -66,18 +79,20 @@ class IntegerValidator {
     let validData = value;
     let isValid = true;
 
-    if(value == null || value.length === 0){
-      errors.push('Value is required')
-      isValid = false;
-      validData = null;
-
-    }else if (typeof value !== 'number' || !Number.isInteger(value)) {
-        errors.push('Value must be an integer.');
+    if (value === null) {
+      if (this.#allowNull) {
+        return { valid: true, data: null }; // Null is allowed
+      } else {
+        errors.push('Integer is required');
         isValid = false;
         validData = null;
-        
+      }
+    } else if (typeof value !== 'number' || !Number.isInteger(value)) {
+      errors.push('Value must be an integer');
+      isValid = false;
+      validData = null;
     } else {
-      for (let rule of this.rules) {
+      for (let rule of this.#rules) {
         const result = rule(value);
 
         if (!result.valid) {
@@ -90,9 +105,8 @@ class IntegerValidator {
       }
     }
 
-    return isValid ? {valid: true, data: validData} : {valid: false, errors}
+    return isValid ? { valid: true, data: validData } : { valid: false, errors };
   }
 }
 
-
-module.exports = IntegerValidator;  // Ensure you export the class
+module.exports = IntegerValidator; // Ensure you export the class
