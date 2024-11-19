@@ -78,10 +78,15 @@ class IntegerValidator {
     let errors = [];
     let validData = value;
     let isValid = true;
-
+  
+    // Convert string values to number
+    if (typeof value === 'string') {
+      value = parseInt(value, 10); // Try converting string to integer
+    }
+  
     if (value === null) {
       if (this.#allowNull) {
-        return { valid: true, data: null }; // Null is allowed
+        return { valid: true, data: null };
       } else {
         errors.push('Integer is required');
         isValid = false;
@@ -94,7 +99,6 @@ class IntegerValidator {
     } else {
       for (let rule of this.#rules) {
         const result = rule(value);
-
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;
@@ -104,9 +108,10 @@ class IntegerValidator {
         }
       }
     }
-
+  
     return isValid ? { valid: true, data: validData } : { valid: false, errors };
   }
+  
 }
 
 module.exports = IntegerValidator; // Ensure you export the class

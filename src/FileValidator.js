@@ -81,7 +81,7 @@ class FileValidator {
       validData = null;
     } else {
       // Check if the file is an object (assumed to be a file object)
-      if (typeof file !== 'object' || !file.mimetype) {
+      if (typeof file !== 'object' || !file.type) {
         errors.push('Invalid file format');
         isValid = false;
         validData = null;
