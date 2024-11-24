@@ -66,13 +66,19 @@ class IntegerValidator {
     return this;
   }
 
-  /**
-   * Validates the provided integer value against all applied rules.
-   * @param {number|null} value - The integer to validate.
-   * @returns {Object} - An object containing:
-   * - `valid`: `true` if validation passed, `false` if any rule failed.
-   * - `errors`: Array of error messages.
-   * - `data`: The validated data or `null` if validation failed.
+   /**
+ * Validates the provided string against all applied #rules.
+ * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+ * 
+ * @param {string|null} value - The string to validate.
+ * @param {Object} [options] - Optional parameters for the validation.
+ * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+ *                                            Defaults to 'value' if not provided. 
+ *                                            It helps to customize error messages for specific fields.
+ * @returns {Object} - Validation result:
+ *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
+ *   - `errors` (`string[]`): An array of error messages, if validation fails.
+ *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
   validate(value) {
     let errors = [];

@@ -68,14 +68,19 @@ class EmailValidator {
     return this; // Enable chaining
   }
 
-  /**
-   * Validates the provided email string against all applied rules.
-   * Checks each rule in the rules array, including format and length validation.
-   * @param {string|null} value - The email string to validate.
-   * @returns {Object} - Validation result:
-   *   - `valid` (`boolean`): True if all rules pass, otherwise false.
-   *   - `errors` (`string[]`): An array of error messages if validation fails.
-   *   - `data` (`string|null`): The validated email if valid, otherwise null.
+   /**
+ * Validates the provided string against all applied #rules.
+ * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+ * 
+ * @param {string|null} value - The string to validate.
+ * @param {Object} [options] - Optional parameters for the validation.
+ * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+ *                                            Defaults to 'value' if not provided. 
+ *                                            It helps to customize error messages for specific fields.
+ * @returns {Object} - Validation result:
+ *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
+ *   - `errors` (`string[]`): An array of error messages, if validation fails.
+ *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
   validate(value) {
     let errors = [];

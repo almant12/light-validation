@@ -59,12 +59,18 @@ class FileValidator {
   }
 
   /**
-   * Validates the provided file against all applied rules.
-   * @param {Object|null} file - The file object to validate.
-   * @returns {Object} - Validation result:
-   *   - `valid` (`boolean`): True if all rules pass, otherwise false.
-   *   - `errors` (`string[]`): An array of error messages if validation fails.
-   *   - `data` (`Object|null`): The validated file if valid, otherwise null.
+ * Validates the provided string against all applied #rules.
+ * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+ * 
+ * @param {string|null} value - The string to validate.
+ * @param {Object} [options] - Optional parameters for the validation.
+ * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+ *                                            Defaults to 'value' if not provided. 
+ *                                            It helps to customize error messages for specific fields.
+ * @returns {Object} - Validation result:
+ *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
+ *   - `errors` (`string[]`): An array of error messages, if validation fails.
+ *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
   validate(file) {
     let errors = [];

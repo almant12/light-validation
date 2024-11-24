@@ -25,10 +25,10 @@ class StringValidator {
    * @returns {StringValidator} - The `StringValidator` instance with the `min` rule applied.
    */
   min(length, options = {}) {
-    const message = `Value must be at least ${length} characters long.`;
-    this.#rules.push((value) => {
+    const message = `must be at least ${length} characters long.`;
+    this.#rules.push((value,fieldName) => {
       if (value.length < length) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, value };
     });
@@ -43,26 +43,32 @@ class StringValidator {
    * @returns {StringValidator} - The `StringValidator` instance with the `max` rule applied.
    */
   max(length, options = {}) {
-    const message = `Value must be no more than ${length} characters long.`;
-    this.#rules.push((value) => {
+    const message = `must be no more than ${length} characters long.`;
+    this.#rules.push((value,fieldName) => {
       if (value.length > length) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, value };
     });
     return this;
   }
 
-  /**
-   * Validates the provided string against all applied #rules.
-   * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
-   * @param {string|null} value - The string to validate.
-   * @returns {Object} - Validation result:
-   *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
-   *   - `errors` (`string[]`): An array of error messages, if validation fails.
-   *   - `data` (`string|null`): The validated string if valid, otherwise null.
-   */
-  validate(value) {
+ /**
+ * Validates the provided string against all applied #rules.
+ * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+ * 
+ * @param {string|null} value - The string to validate.
+ * @param {Object} [options] - Optional parameters for the validation.
+ * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+ *                                            Defaults to 'value' if not provided. 
+ *                                            It helps to customize error messages for specific fields.
+ * @returns {Object} - Validation result:
+ *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
+ *   - `errors` (`string[]`): An array of error messages, if validation fails.
+ *   - `data` (`string|null`): The validated string if valid, otherwise null.
+ */
+  validate(value,options = {}) {
+    const {fieldName = 'value'} = options;
     let errors = [];
     let validData = value;
     let isValid = true;
@@ -71,16 +77,16 @@ class StringValidator {
       if (this.#allowNull) {
         return { valid: true, data: null }; // Pass validation for null/empty if nullable
       }
-      errors.push('String is required');
+      errors.push(`${fieldName} is required`);
       isValid = false;
       validData = null;
     } else if (typeof value !== 'string') {
-      errors.push('Value must be a string');
+      errors.push(`${fieldName} must be a string`);
       isValid = false;
       validData = null;
     } else {
       for (let rule of this.#rules) {
-        const result = rule(value.trim());
+        const result = rule(value.trim(),fieldName);
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;

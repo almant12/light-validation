@@ -79,13 +79,19 @@ class PasswordValidator {
     return this;
   }
 
-  /**
-   * Validates the provided value against all #rules.
-   * @param {string|null} value - The password to validate.
-   * @returns {Object} - Validation result:
-   *   - `valid` (`boolean`): True if all #rules pass.
-   *   - `errors` (`string[]`): Array of error messages if validation fails.
-   *   - `data` (`string|null`): The validated password, or null if invalid.
+ /**
+ * Validates the provided string against all applied #rules.
+ * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+ * 
+ * @param {string|null} value - The string to validate.
+ * @param {Object} [options] - Optional parameters for the validation.
+ * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+ *                                            Defaults to 'value' if not provided. 
+ *                                            It helps to customize error messages for specific fields.
+ * @returns {Object} - Validation result:
+ *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
+ *   - `errors` (`string[]`): An array of error messages, if validation fails.
+ *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
   validate(value) {
     let errors = [];
@@ -118,6 +124,7 @@ class PasswordValidator {
 
     return isValid ? { valid: true, data: validData } : { valid: false, errors };
   }
+  
 }
 
 module.exports = PasswordValidator;
