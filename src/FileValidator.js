@@ -30,7 +30,7 @@ class FileValidator {
   type(allowedTypes, options = {}) {
     const message = options.message || `File type must be one of: ${allowedTypes.join(', ')}`;
     this.#rules.push((file) => {
-      if (!allowedTypes.includes(file.mimetype)) {
+      if (!allowedTypes.includes(file.type)) {
         return { valid: false, error: message };
       }
       return { valid: true, data: file };

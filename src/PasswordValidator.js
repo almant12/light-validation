@@ -26,7 +26,7 @@ class PasswordValidator {
    */
   #regex(pattern, value, errorMessage) {
     if (!pattern.test(value)) {
-      return { valid: false, error: errorMessage };
+      return { valid: false, error: errorMessage};
     }
     return { valid: true, value };
   }
@@ -37,8 +37,8 @@ class PasswordValidator {
    */
   containsNumber() {
     const pattern = /[0-9]/;
-    const message = 'Password must contain at least one number.';
-    this.#rules.push((value) => this.#regex(pattern, value, message));
+    const message = 'must contain at least one number.';
+    this.#rules.push((value,fieldName) => this.#regex(pattern, value, `${fieldName} ${message}`));
     return this;
   }
 
@@ -48,8 +48,8 @@ class PasswordValidator {
    */
   containsSpecialChar() {
     const pattern = /[!@#$%^&*(),.?":{}|<>]/;
-    const message = 'Password must contain at least one special character.';
-    this.#rules.push((value) => this.#regex(pattern, value, message));
+    const message = 'must contain at least one special character.';
+    this.#rules.push((value, fieldName) => this.#regex(pattern, value, `${fieldName} ${message}`));
     return this;
   }
 
@@ -59,8 +59,8 @@ class PasswordValidator {
    */
   containsUppercase() {
     const pattern = /[A-Z]/;
-    const message = 'Password must contain at least one uppercase letter.';
-    this.#rules.push((value) => this.#regex(pattern, value, message));
+    const message = 'must contain at least one uppercase letter.';
+    this.#rules.push((value,fieldName) => this.#regex(pattern, value, `${fieldName} ${message}`));
     return this;
   }
 
@@ -70,9 +70,10 @@ class PasswordValidator {
    * @returns {PasswordValidator} - The instance with the rule applied.
    */
   min(length) {
-    this.#rules.push((value) => {
+    const message = `must be at least ${length} characters long`
+    this.#rules.push((value,fieldName) => {
       if (value.length < length) {
-        return { valid: false, error: `Password must be at least ${length} characters long.` };
+        return { valid: false, error: `${fieldName} ${message}` };
       }
       return { valid: true };
     });
@@ -93,7 +94,8 @@ class PasswordValidator {
  *   - `errors` (`string[]`): An array of error messages, if validation fails.
  *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
-  validate(value) {
+  validate(value,options = {}) {
+    const {fieldName = 'Password'} = options;
     let errors = [];
     let validData = value;
     let isValid = true;
@@ -102,16 +104,16 @@ class PasswordValidator {
       if (this.#allowNull) {
         return { valid: true, data: null };
       }
-      errors.push('Password is required');
+      errors.push(`${fieldName} is required`);
       isValid = false;
       validData = null;
     } else if (typeof value !== 'string') {
-      errors.push('Password must be a string');
+      errors.push(`${fieldName} must be a string`);
       isValid = false;
       validData = null;
     } else {
       for (let rule of this.#rules) {
-        const result = rule(value);
+        const result = rule(value,fieldName);
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;

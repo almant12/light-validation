@@ -21,14 +21,13 @@ class ObjectSchema {
 
     for (let key of schemaKeys) {
       if (!dataKeys.includes(key)) {
-        errors[key] = `${key} is required.`;
-        isValid = false;
+        errors[key] = `${key} is required`;
       }
     }
 
     if (isValid) {
       for (let key in this.schema) {
-        const result = this.schema[key].validate(data[key]);
+        const result = this.schema[key].validate(data[key],{fieldName:key});
 
         if (!result.valid) {
           errors[key] = result.errors[0];

@@ -23,10 +23,10 @@ class IntegerValidator {
    * @returns {IntegerValidator} - The `IntegerValidator` instance with the `min` rule applied.
    */
   min(minValue, options = {}) {
-    const message = `Value must be greater than or equal to ${minValue}`;
-    this.#rules.push((value) => {
+    const message = `must be greater than or equal to ${minValue}`;
+    this.#rules.push((value,fieldName) => {
       if (value < minValue) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}`};
       }
       return { valid: true, value };
     });
@@ -40,10 +40,10 @@ class IntegerValidator {
    * @returns {IntegerValidator} - The `IntegerValidator` instance with the `max` rule applied.
    */
   max(maxValue, options = {}) {
-    const message = `Value must be less than or equal to ${maxValue}`;
-    this.#rules.push((value) => {
+    const message = `must be less than or equal to ${maxValue}`;
+    this.#rules.push((value,fieldName) => {
       if (value > maxValue) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}`};
       }
       return { valid: true, value };
     });
@@ -56,10 +56,10 @@ class IntegerValidator {
    * @returns {IntegerValidator} - The `IntegerValidator` instance with the `positive` rule applied.
    */
   positive(options = {}) {
-    const message = 'Value must be a positive number';
-    this.#rules.push((value) => {
+    const message = 'must be a positive number';
+    this.#rules.push((value,fieldName) => {
       if (value <= 0) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, value };
     });
@@ -80,7 +80,8 @@ class IntegerValidator {
  *   - `errors` (`string[]`): An array of error messages, if validation fails.
  *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
-  validate(value) {
+  validate(value,options = {}) {
+    const {fieldName = 'value'} = options;
     let errors = [];
     let validData = value;
     let isValid = true;
@@ -94,17 +95,17 @@ class IntegerValidator {
       if (this.#allowNull) {
         return { valid: true, data: null };
       } else {
-        errors.push('Integer is required');
+        errors.push(`${fieldName} is required`);
         isValid = false;
         validData = null;
       }
     } else if (typeof value !== 'number' || !Number.isInteger(value)) {
-      errors.push('Value must be an integer');
+      errors.push(`${fieldName} must be a integer`);
       isValid = false;
       validData = null;
     } else {
       for (let rule of this.#rules) {
-        const result = rule(value);
+        const result = rule(value,fieldName);
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;
