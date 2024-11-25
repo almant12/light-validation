@@ -27,16 +27,53 @@ class FileValidator {
    * @param {string} [options.message] - Custom error message.
    * @returns {FileValidator} - The `FileValidator` instance with the `type` rule applied.
    */
-  type(allowedTypes, options = {}) {
-    const message = options.message || `File type must be one of: ${allowedTypes.join(', ')}`;
-    this.#rules.push((file) => {
-      if (!allowedTypes.includes(file.type)) {
-        return { valid: false, error: message };
+  type(allowedExtensions, options = {}) { 
+    // Map common extensions to MIME types
+    const mimeTypes = {
+      jpg: 'image/jpg',
+      jpeg: 'image/jpeg',
+      png: 'image/png',
+      gif: 'image/gif',
+      pdf: 'application/pdf',
+      txt: 'text/plain',
+      doc: 'application/msword',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    };
+  
+    // Validate extensions and collect MIME types
+    const allowedMimeTypes = [];
+    const invalidExtensions = [];
+  
+    allowedExtensions.forEach(ext => {
+      const mimeType = mimeTypes[ext.toLowerCase()];
+      if (mimeType) {
+        allowedMimeTypes.push(mimeType);
+      } else {
+        invalidExtensions.push(ext);
+      }
+    });
+  
+    // Throw an error if any extensions are invalid
+    if (invalidExtensions.length > 0) {
+      throw new Error(
+        `Invalid file extensions provided: ${invalidExtensions.join(', ')}.`
+      );
+    }
+  
+    // Validation message
+    const message = `must be of type: ${allowedExtensions.join(', ')}`;
+  
+    // Add rule to the validator
+    this.#rules.push((file,fieldName) => {
+      if (!allowedMimeTypes.includes(file.type)) {
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, data: file };
     });
+  
     return this; // Enable chaining
   }
+  
 
   /**
    * Adds a rule to validate the file size (in bytes).
@@ -72,7 +109,8 @@ class FileValidator {
  *   - `errors` (`string[]`): An array of error messages, if validation fails.
  *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
-  validate(file) {
+  validate(file,options = {}) {
+    const {fieldName = 'file'} = options;
     let errors = [];
     let validData = file;
     let isValid = true;
@@ -82,19 +120,19 @@ class FileValidator {
       if (this.#allowNull) {
         return { valid: true, data: null }; // Return null if file is allowed to be null
       }
-      errors.push('File is required');
+      errors.push(`${fieldName} is required`);
       isValid = false;
       validData = null;
     } else {
       // Check if the file is an object (assumed to be a file object)
       if (typeof file !== 'object' || !file.type) {
-        errors.push('Invalid file format');
+        errors.push(`${fieldName} invalid format`);
         isValid = false;
         validData = null;
       } else {
         // Apply rules from the `#rules` array
         for (let rule of this.#rules) {
-          const result = rule(file);
+          const result = rule(file,fieldName);
           if (!result.valid) {
             errors.push(result.error);
             isValid = false;
