@@ -83,12 +83,12 @@ class FileValidator {
    * @returns {FileValidator} - The `FileValidator` instance with the `size` rule applied.
    */
   maxSize(maxSizeMB, options = {}) {
-    const message = options.message || `File size must not exceed ${maxSizeMB} MB.`;
+    const message =`size must not exceed ${maxSizeMB} MB`;
     const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert MB to bytes
 
-    this.#rules.push((file) => {
+    this.#rules.push((file,fieldName) => {
       if (file.size > maxSizeBytes) {
-        return { valid: false, error: message };
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, data: file };
     });
