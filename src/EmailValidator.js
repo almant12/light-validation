@@ -58,10 +58,10 @@ class EmailValidator {
    * @returns {EmailValidator} - The `EmailValidator` instance with the `max` rule applied.
    */
   max(length, options = {}) {
-    const message = `Email must be no more than ${length} characters long.`;
-    this.#rules.push((value) => {
+    const message = `must be no more than ${length} characters long.`;
+    this.#rules.push((value,fieldName) => {
       if (value.length > length) {
-        return { valid: false, error: options.message || message };
+        return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
       return { valid: true, data: value };
     });
@@ -82,7 +82,8 @@ class EmailValidator {
  *   - `errors` (`string[]`): An array of error messages, if validation fails.
  *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
-  validate(value) {
+  validate(value,options = {}) {
+    const {fieldName = 'Email'} = options;
     let errors = [];
     let validData = value;
     let isValid = true;
@@ -92,13 +93,13 @@ class EmailValidator {
       if (this.#allowNull) {
         return { valid: true, data: null }; // Return null if email is allowed to be null
       }
-      errors.push('Email is required');
+      errors.push(`${fieldName} is required`);
       isValid = false;
       validData = null;
     } else {
       // Ensure the value is a string (assuming it's a basic string input)
       if (typeof value !== 'string') {
-        errors.push('Value must be a valid string');
+        errors.push(`${fieldName} must be a string`);
         isValid = false;
         validData = null;
       } else {
@@ -114,7 +115,7 @@ class EmailValidator {
 
         // Apply additional rules from the `#rules` array
         for (let rule of this.#rules) {
-          const result = rule(value);
+          const result = rule(value,fieldName);
           if (!result.valid) {
             errors.push(result.error);
             isValid = false;
