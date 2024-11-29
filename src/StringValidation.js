@@ -1,5 +1,4 @@
 class StringValidator {
-
   #rules;
   #allowNull;
 
@@ -10,6 +9,7 @@ class StringValidator {
 
   /**
    * Adds a rule to allow null or empty strings as valid inputs.
+   * 
    * @returns {StringValidator} - The `StringValidator` instance with the `nullable` rule applied.
    */
   nullable() {
@@ -18,7 +18,8 @@ class StringValidator {
   }
 
   /**
-   * Adds a rule to ensure the string has at least `length` characters.
+   * Adds a rule to ensure the string has at least the specified number of characters.
+   * 
    * @param {number} length - The minimum number of characters required.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
@@ -26,7 +27,7 @@ class StringValidator {
    */
   min(length, options = {}) {
     const message = `must be at least ${length} characters long.`;
-    this.#rules.push((value,fieldName) => {
+    this.#rules.push((value, fieldName) => {
       if (value.length < length) {
         return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
@@ -36,7 +37,8 @@ class StringValidator {
   }
 
   /**
-   * Adds a rule to ensure the string has no more than `length` characters.
+   * Adds a rule to ensure the string has no more than the specified number of characters.
+   * 
    * @param {number} length - The maximum number of characters allowed.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
@@ -44,7 +46,7 @@ class StringValidator {
    */
   max(length, options = {}) {
     const message = `must be no more than ${length} characters long.`;
-    this.#rules.push((value,fieldName) => {
+    this.#rules.push((value, fieldName) => {
       if (value.length > length) {
         return { valid: false, error: options.message || `${fieldName} ${message}` };
       }
@@ -53,22 +55,22 @@ class StringValidator {
     return this;
   }
 
- /**
- * Validates the provided string against all applied #rules.
- * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
- * 
- * @param {string|null} value - The string to validate.
- * @param {Object} [options] - Optional parameters for the validation.
- * @param {string} [options.fieldName='value'] - The name of the field being validated. 
- *                                            Defaults to 'value' if not provided. 
- *                                            It helps to customize error messages for specific fields.
- * @returns {Object} - Validation result:
- *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
- *   - `errors` (`string[]`): An array of error messages, if validation fails.
- *   - `data` (`string|null`): The validated string if valid, otherwise null.
- */
-  validate(value,options = {}) {
-    const {fieldName = 'value'} = options;
+  /**
+   * Validates the provided string against all applied rules.
+   * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
+   * 
+   * @param {string|null} value - The string to validate.
+   * @param {Object} [options] - Optional parameters for the validation.
+   * @param {string} [options.fieldName='value'] - The name of the field being validated. 
+   *                                            Defaults to 'value' if not provided. 
+   *                                            It helps to customize error messages for specific fields.
+   * @returns {Object} - Validation result:
+   *   - `valid` (`boolean`): True if all rules pass, otherwise false.
+   *   - `errors` (`string[]`): An array of error messages, if validation fails.
+   *   - `data` (`string|null`): The validated string if valid, otherwise null.
+   */
+  validate(value, options = {}) {
+    const { fieldName = 'value' } = options;
     let errors = [];
     let validData = value;
     let isValid = true;
@@ -86,7 +88,7 @@ class StringValidator {
       validData = null;
     } else {
       for (let rule of this.#rules) {
-        const result = rule(value.trim(),fieldName);
+        const result = rule(value.trim(), fieldName);
         if (!result.valid) {
           errors.push(result.error);
           isValid = false;
