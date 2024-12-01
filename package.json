@@ -1,6 +1,6 @@
 {
   "name": "light-validation",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "A lightweight validation package that helps validate fields from requests.",
   "main": "index.js",
   "scripts": {
