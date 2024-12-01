@@ -11,30 +11,27 @@ This npm package has just been created. In the future, we plan to add more valid
 To install this package, use npm:
 
 ```bash
-npm install almant-validation
+npm install light-validation
 ```
 ## API
 
 ## 1. StringValidator
 
-Use `string()` to apply rules such as minimum/maximum length, regular expression matching, and email format checks to a string.
+Use `string()` to apply rules such as minimum/maximum length. Errors are optional, so if you don't want an error message, you can skip providing one.
 ## Methods
 
-- min(length, error): Validates that the string length is at least length characters.
-- max(length, error): Validates that the string length is at most length characters.
-- trim(): Removes leading and trailing whitespace from the string.
-- validate(value): Runs all applied rules on the string and returns either the validated data if all rules pass or an error if any rule fails.
+- min(length, options): Validates that the string length is at least length characters.
+- max(length, options): Validates that the string length is at most length characters.
+- validate(value, options): Runs all applied rules on the string and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
 
 ```javascript
-import almantZod from 'alamnt-validation'
+import v from 'light-validation';
 
-const stringValidator = almantZod.string()
-  .min(5, { message: 'Too short!' })
-  .max(10, { message: 'Too long!' })
-  .trim();
+const result = v.validate.min(5)
+.("Jerry",{fieldName:'name'});
 
-const result = stringValidator.validate(" example@example.com ");
-console.log(result); // { valid: true, data: "example@example.com" }
+console.log(result); //  valid: false, errors: [ 'name must be at least 5 characters long.' ]
+
 ```
 
 ## 2. IntegerValidator
