@@ -28,37 +28,35 @@ Use `string()` to apply rules such as minimum/maximum length. Errors are optiona
 import v from 'light-validation';
 
 const result = v.validate.min(5)
-.("Jerry",{fieldName:'name'});
+.("Jerry",{fieldName:'Name'});
 
-console.log(result); //  valid: false, errors: [ 'name must be at least 5 characters long.' ]
+console.log(result); //  {valid: false, errors: [ 'Name must be at least 5 characters long.' ]}
 
 ```
 
 ## 2. IntegerValidator
 
 Use `integer()` to validate integer values based on minimum, maximum, and positive value constraints.
-## Rules
+### Rules:
 
-- min(minValue, error): Ensures the integer is greater than or equal to minValue.
-- max(maxValue, error): Ensures the integer is less than or equal to maxValue.
+- min(minValue, options): Ensures the integer is greater than or equal to minValue.
+- max(maxValue, options): Ensures the integer is less than or equal to maxValue.
 - positive(error): Ensures the integer is greater than 0.
-- validate(value): Runs all applied rules on the integer and returns either the validated data if all rules pass or an error if any rule fails.
+- validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
 
 ```javascript
-import almantZod from 'alamnt-validation'
+import v from 'light-validation';
 
-const integerValidator = almantZod.integer()
-  .min(1, { message: 'Must be at least 1' })
-  .positive({ message: 'Must be positive' });
+const result = v.integer().min(18)
+.validate(17,{fieldName:'Age'})
 
-const result = integerValidator.validate(10);
-console.log(result); // { valid: true, data: 10 }
+console.log(result); // { valid: false, errors: [ 'Age must be greater than or equal to 18' ] }
 ```
 
 ## 3. ObjectSchema
 
 Use `object()` to validate complex objects based on a schema.
-## Methods
+### Rules:
 
 - parseData(data): Validates the object against the schema and returns either an object data with success if all rules pass or an error if any rule fails.
 
