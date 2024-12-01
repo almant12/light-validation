@@ -18,7 +18,7 @@ npm install light-validation
 ## 1. StringValidator
 
 Use `string()` to apply rules such as minimum/maximum length. Errors are optional, so if you don't want an error message, you can skip providing one.
-## Methods
+### Rules:
 
 - min(length, options): Validates that the string length is at least length characters.
 - max(length, options): Validates that the string length is at most length characters.
@@ -37,7 +37,7 @@ console.log(result); //  valid: false, errors: [ 'name must be at least 5 charac
 ## 2. IntegerValidator
 
 Use `integer()` to validate integer values based on minimum, maximum, and positive value constraints.
-## Methods
+## Rules
 
 - min(minValue, error): Ensures the integer is greater than or equal to minValue.
 - max(maxValue, error): Ensures the integer is less than or equal to maxValue.
