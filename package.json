@@ -1,7 +1,7 @@
 {
-  "name": "almant-validation",
+  "name": "light-validation", 
   "version": "1.0.16",
-  "description": "is a validation package which helps to validate the fields from the request",
+  "description": "A lightweight validation package that helps validate fields from requests.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"No tests specified\" && exit 0"
@@ -10,7 +10,8 @@
     "validation",
     "string",
     "integer",
-    "schema"
+    "schema",
+    "light"
   ],
   "author": "Almant",
   "license": "MIT",
