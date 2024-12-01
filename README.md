@@ -22,13 +22,14 @@ Use `string()` to apply rules such as minimum/maximum length. Errors are optiona
 
 - min(length, options): Validates that the string length is at least length characters.
 - max(length, options): Validates that the string length is at most length characters.
+- nullable(): Allows the string to be null or an empty string, making it a valid input when set.
 - validate(value, options): Runs all applied rules on the string and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
 
 ```javascript
 import v from 'light-validation';
 
-const result = v.validate.min(5)
-.("Jerry",{fieldName:'Name'});
+const result = v.validate.min(7)
+.("Almant",{fieldName:'Name'});
 
 console.log(result); //  {valid: false, errors: [ 'Name must be at least 5 characters long.' ]}
 
@@ -41,6 +42,7 @@ Use `integer()` to validate integer values based on minimum, maximum, and positi
 
 - min(minValue, options): Ensures the integer is greater than or equal to minValue.
 - max(maxValue, options): Ensures the integer is less than or equal to maxValue.
+- nullable(): Allows the string to be null or an empty string, making it a valid input when set.
 - positive(error): Ensures the integer is greater than 0.
 - validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
 
@@ -59,7 +61,84 @@ const result1 = v.integer().min(18,{message:'You must be at least 18 years old'}
 
 console.log(result1); // { valid: false, errors: [ 'You must be at least 18 years old' ] }
 ```
-## 3. ObjectSchema
+
+## 3. EmailValidator
+
+Use `email()` to validate email addresses with built-in checks for proper email format.
+### Rules:
+
+- nullable(): Allows the string to be null or an empty string, making it a valid input when set.
+- validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
+
+```javascript
+import v from 'light-validation';
+
+const result = v.email().validate('almant@gmail.com')
+
+console.log(result); // { valid: true, data: 'almant@gmail.com' }
+```
+
+## 4. PasswordValidation
+
+Use `password()` to validate passwords with requirements like minimum length, inclusion of numbers, symbols, etc.
+### Rules:
+
+- containsNumber(): Ensures the password contains at least one numeric digit.
+- containsSpecialChar(): Ensures the password contains at least one special character.
+- containsUppercase(): Ensures the password contains at least one uppercase letter.
+- min(): Ensures the password has a minimum length.
+- nullable(): Allows the string to be null or an empty string, making it a valid input when set.
+- validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
+
+```javascript
+import v from 'light-validation';
+
+const password = v.password().min(8)
+.containsNumber()
+.containsSpecialChar()
+.validate('1234567',{fieldName:"Password"});
+
+console.log(result);  //{
+//   valid: false,
+//   errors: [
+//     'Password must be at least 8 characters long.',
+//     'Password must contain at least one special character.'
+//   ]
+// }
+```
+
+## 5. FileValidation
+
+Use `file()` to validate file uploads based on type, size, and other properties.
+### Rules:
+
+- type(mimeType, error): Ensures the file is of the specified MIME type (e.g., 'image/jpeg').
+- size(maxSize, error): Ensures the file is not larger than maxSize.
+- nullable(): Allows the string to be null or an empty string, making it a valid input when set.
+- validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
+
+```javascript
+import v from 'light-validation';
+
+const file = {
+  type: 'image/jpg',
+  size: 50000000, // 5MB
+};
+
+// Validate the file with specific rules: type must be 'image/jpg' and size must not exceed 5MB.
+const image = v
+  .file()  // Start the validation chain for file
+  .type(['jpg'])  // Validate that the file is of type 'jpg'
+  .maxSize(5)  // Validate that the file pass it as MB
+  .validate(file, { fieldName: 'avatar' });  // Perform validation on the 'file' object with custom field name 'avatar'
+
+console.log(image); 
+// This will log the result of the validation. If everything is fine, it will return:
+// { valid: true, data: file }
+// Otherwise, it will return errors based on the validation rules.
+```
+
+## 6. ObjectSchema
 
 Use `object()` to validate complex objects based on a schema.
 ### Rules:
