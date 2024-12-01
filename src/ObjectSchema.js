@@ -1,8 +1,26 @@
+/**
+ * Class to validate objects against a predefined schema.
+ */
 class ObjectSchema {
+  /**
+   * Initializes the schema for validation.
+   * @param {Object} schema - An object where each key represents a field, and the value is a validator with a `validate` method.
+   */
   constructor(schema) {
     this.schema = schema;
   }
 
+  /**
+   * Validates the provided data object against the schema.
+   * @param {Object} data - The object to validate, where each key corresponds to a schema-defined field.
+   * @returns {Object} - Validation result:
+   *   - If valid:
+   *     - `valid` (boolean): `true`.
+   *     - `data` (Object): Cleaned and validated data object.
+   *   - If invalid:
+   *     - `valid` (boolean): `false`.
+   *     - `errors` (Object): An object with error messages, keyed by field name.
+   */
   parseData(data) {
     const errors = {};
     const validData = {};

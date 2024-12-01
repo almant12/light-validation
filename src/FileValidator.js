@@ -13,7 +13,6 @@ class FileValidator {
 
   /**
    * Allows the file to be nullable (can be null or empty).
-   * @returns {FileValidator} - The `FileValidator` instance with the `nullable` rule applied.
    */
   nullable() {
     this.#allowNull = true;
@@ -25,7 +24,6 @@ class FileValidator {
    * @param {string[]} allowedTypes - List of allowed MIME types.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
-   * @returns {FileValidator} - The `FileValidator` instance with the `type` rule applied.
    */
   type(allowedExtensions, options = {}) { 
     // Map common extensions to MIME types
@@ -76,11 +74,10 @@ class FileValidator {
   
 
   /**
-   * Adds a rule to validate the file size (in bytes).
+   * Adds a rule to validate the file size.
    * @param {number} maxSizeMB - Maximum allowed file size in MB.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
-   * @returns {FileValidator} - The `FileValidator` instance with the `size` rule applied.
    */
   maxSize(maxSizeMB, options = {}) {
     const message =`size must not exceed ${maxSizeMB} MB`;

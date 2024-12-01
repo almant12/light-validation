@@ -10,7 +10,6 @@ class StringValidator {
   /**
    * Adds a rule to allow null or empty strings as valid inputs.
    * 
-   * @returns {StringValidator} - The `StringValidator` instance with the `nullable` rule applied.
    */
   nullable() {
     this.#allowNull = true; // Enable nullable behavior
@@ -23,7 +22,6 @@ class StringValidator {
    * @param {number} length - The minimum number of characters required.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
-   * @returns {StringValidator} - The `StringValidator` instance with the `min` rule applied.
    */
   min(length, options = {}) {
     const message = `must be at least ${length} characters long.`;
@@ -42,7 +40,6 @@ class StringValidator {
    * @param {number} length - The maximum number of characters allowed.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
-   * @returns {StringValidator} - The `StringValidator` instance with the `max` rule applied.
    */
   max(length, options = {}) {
     const message = `must be no more than ${length} characters long.`;

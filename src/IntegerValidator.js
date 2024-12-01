@@ -19,8 +19,8 @@ class IntegerValidator {
   /**
    * Ensures the integer value is greater than or equal to `minValue`.
    * @param {number} minValue - Minimum value the integer should be.
-   * @param {Object} error - Custom error message.
-   * @returns {IntegerValidator} - The `IntegerValidator` instance with the `min` rule applied.
+   * @param {Object} [options] - Optional parameters.
+   * @param {string} [options.message] - Custom error message.
    */
   min(minValue, options = {}) {
     const message = `must be greater than or equal to ${minValue}`;
@@ -36,8 +36,8 @@ class IntegerValidator {
   /**
    * Ensures the integer value is less than or equal to `maxValue`.
    * @param {number} maxValue - Maximum value the integer should be.
-   * @param {Object} error - Custom error message.
-   * @returns {IntegerValidator} - The `IntegerValidator` instance with the `max` rule applied.
+   * @param {Object} [options] - Optional parameters.
+   * @param {string} [options.message] - Custom error message.
    */
   max(maxValue, options = {}) {
     const message = `must be less than or equal to ${maxValue}`;
@@ -52,8 +52,7 @@ class IntegerValidator {
 
   /**
    * Ensures the integer value is positive (greater than 0).
-   * @param {Object} error - Custom error message.
-   * @returns {IntegerValidator} - The `IntegerValidator` instance with the `positive` rule applied.
+   * @param {Object} [options] - Optional parameters.
    */
   positive(options = {}) {
     const message = 'must be a positive number';

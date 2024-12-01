@@ -17,7 +17,6 @@ class EmailValidator {
 
   /**
    * Allows the email to be nullable (can be null or empty).
-   * @returns {EmailValidator} - The `EmailValidator` instance with the `nullable` rule applied.
    */
   nullable() {
     this.#allowNull = true;
@@ -55,7 +54,6 @@ class EmailValidator {
    * @param {number} length - Maximum allowed length of the email.
    * @param {Object} [options] - Optional parameters.
    * @param {string} [options.message] - Custom error message.
-   * @returns {EmailValidator} - The `EmailValidator` instance with the `max` rule applied.
    */
   max(length, options = {}) {
     const message = `must be no more than ${length} characters long.`;

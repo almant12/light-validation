@@ -25,8 +25,6 @@ class PasswordValidator {
 
   /**
    * Allows null or empty values to pass validation.
-   * Useful when passwords are optional in certain contexts.
-   * @returns {PasswordValidator} - The current instance with nullable behavior applied.
    */
   nullable() {
     this.#allowNull = true;
@@ -35,7 +33,6 @@ class PasswordValidator {
 
   /**
    * Adds a rule to ensure the password contains at least one number.
-   * @returns {PasswordValidator} - The current instance with the rule applied.
    */
   containsNumber() {
     const pattern = /[0-9]/;
@@ -48,7 +45,6 @@ class PasswordValidator {
 
   /**
    * Adds a rule to ensure the password contains at least one special character.
-   * @returns {PasswordValidator} - The current instance with the rule applied.
    */
   containsSpecialChar() {
     const pattern = /[!@#$%^&*(),.?":{}|<>]/;
@@ -61,7 +57,6 @@ class PasswordValidator {
 
   /**
    * Adds a rule to ensure the password contains at least one uppercase letter.
-   * @returns {PasswordValidator} - The current instance with the rule applied.
    */
   containsUppercase() {
     const pattern = /[A-Z]/;
@@ -75,7 +70,6 @@ class PasswordValidator {
   /**
    * Adds a rule to ensure the password is at least the specified length.
    * @param {number} length - Minimum length required for the password.
-   * @returns {PasswordValidator} - The current instance with the rule applied.
    */
   min(length) {
     const message = `must be at least ${length} characters long.`;
