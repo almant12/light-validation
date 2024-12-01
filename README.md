@@ -112,7 +112,7 @@ console.log(result);  //{
 Use `file()` to validate file uploads based on type, size, and other properties.
 ### Rules:
 
-- type(mimeType, error): Ensures the file is of the specified MIME type (e.g., 'image/jpeg').
+- type(mimeType, error): Ensures the file is of the specified MIME type (e.g., 'jpeg, jpg, png, ect...').
 - size(maxSize, error): Ensures the file is not larger than maxSize.
 - nullable(): Allows the string to be null or an empty string, making it a valid input when set.
 - validate(value, options): Runs all applied rules on the integer and returns either the validated data if all rules pass, or an error if any rule fails. If you are not using a schema, you can pass the `fieldName` as an option to attach the fieldName to error message.
@@ -125,7 +125,7 @@ const file = {
   size: 50000000, // 5MB
 };
 
-// Validate the file with specific rules: type must be 'image/jpg' and size must not exceed 5MB.
+// Validate the file with specific rules:
 const image = v
   .file()  // Start the validation chain for file
   .type(['jpg'])  // Validate that the file is of type 'jpg'
