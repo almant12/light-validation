@@ -4,7 +4,7 @@ This npm package has just been created. In the future, we plan to add more valid
 
 ##
 
-`Light Validation` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, email, password and object schemas. Use `string()`, `integer()`, `email()`, `password()` and `object()` to perform custom validations on your data, with easy-to-read error messages.
+`Light Validation` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, email, password and object schemas. Use `string()`, `integer()`, `email()`, `file()`, `password()` and `object()` to perform custom validations on your data, with easy-to-read error messages.
 
 ## Installation
 
