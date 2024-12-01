@@ -51,8 +51,14 @@ const result = v.integer().min(18)
 .validate(17,{fieldName:'Age'})
 
 console.log(result); // { valid: false, errors: [ 'Age must be greater than or equal to 18' ] }
-```
 
+//Or you can define your custom error message
+
+const result1 = v.integer().min(18,{message:'You must be at least 18 years old'})
+.validate(17,{fieldName:'Age'})
+
+console.log(result); // { valid: false, errors: [ 'You must be at least 18 years old' ] }
+```
 ## 3. ObjectSchema
 
 Use `object()` to validate complex objects based on a schema.
