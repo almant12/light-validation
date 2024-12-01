@@ -140,31 +140,34 @@ console.log(image);
 
 ## 6. ObjectSchema
 
-Use `object()` to validate complex objects based on a schema.
-### Rules:
+Use `object()` to validate objects against a predefined schema. Each field in the schema is associated with a validator that provides specific validation rules and methods.
 
 - parseData(data): Validates the object against the schema and returns either an object data with success if all rules pass or an error if any rule fails.
 
 
 ```javascript
-import almantZod from 'alamnt-validation'
+import v from 'light-validation';
 
-const userSchema = almantZod.object({
-  username: almantZod.string().min(3, { message: 'Username too short' }),
-  email: almantZod.string().email({ message: 'Please enter a valid email.'}),
-  password: almantZod.string().min(8, { message: 'Password must be at least 8 characters long.' })
- .regex(/[0-9]/, { message: 'Password must contain at least one number.' }),
-  age: almantZod.integer().min(18, { message: 'Must be at least 18' }),
-});
-
-const result = userSchema.parseData({
-  username: "john",
-  email: "john@example.com",
-  password: "password1",
-  age: 20
-});
+ const userSchema = v.object({
+    username: v.string().min(3),
+    email: v.email(),
+    password: v.password().min(8).containsSpecialChar(),
+    age: v.integer().min(18),
+  });
+  
+  const result = userSchema.parseData({
+    username: "john",
+    email: "john@example.com",
+    password: "password1",
+    age: 20
+  });
 
 console.log(result); 
 // Expected output:
-// { success: true, data: { username: "john", email: "john@example.com", password: "password1", age: 20 } }
+/*
+{
+  valid: false,
+  errors: { password: 'password must contain at least one special character.' }
+}
+*/
 ```
