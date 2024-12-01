@@ -1,10 +1,10 @@
-# almantZod
+# Light Validation
 
 This npm package has just been created. In the future, we plan to add more validation rules and features to enhance its functionality. Stay tuned for updates!
 
 ##
 
-`almantZod` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, email, password and object schemas. Use `StringValidator`, `IntegerValidator`, `EmailValidator`, `PasswordValidator` and `ObjectSchema` to perform custom validations on your data, with easy-to-read error messages.
+`Light Validation` is a lightweight JavaScript validation library inspired by Zod, providing flexible validation rules for strings, integers, email, password and object schemas. Use `StringValidator`, `IntegerValidator`, `EmailValidator`, `PasswordValidator` and `ObjectSchema` to perform custom validations on your data, with easy-to-read error messages.
 
 ## Installation
 
