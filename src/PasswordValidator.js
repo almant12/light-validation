@@ -67,6 +67,17 @@ class PasswordValidator {
     return this;
   }
 
+  confirmPassword(confirmPassword){
+    const message = 'Password do not match';
+    this.#rules.push((value,fieldName)=>{
+      if(value !== confirmPassword){
+        return {valid: false, error: `${message}`}
+      }
+      return {valid: true, value}
+    })
+    return this;
+  }
+
   /**
    * Adds a rule to ensure the password is at least the specified length.
    * @param {number} length - Minimum length required for the password.
@@ -77,7 +88,7 @@ class PasswordValidator {
       if (value.length < length) {
         return { valid: false, error: `${fieldName} ${message}` };
       }
-      return { valid: true };
+      return { valid: true ,value};
     });
     return this;
   }

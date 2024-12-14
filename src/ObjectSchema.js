@@ -1,6 +1,3 @@
-/**
- * Class to validate objects against a predefined schema.
- */
 class ObjectSchema {
   /**
    * Initializes the schema for validation.
@@ -30,6 +27,17 @@ class ObjectSchema {
       const validator = this.schema[key];
       const value = data[key] ?? null; // Handle missing keys as `null`
 
+      // Check if the password field is being validated
+      if (key === 'password') {
+        // Validate password confirmation logic
+        const confirmationResult = this.#validatePasswordConfirmation(data);
+        if (!confirmationResult.valid) {
+          errors['password_confirmation'] = confirmationResult.error;
+          isValid = false;
+        }
+      }
+
+      // Validate the current field
       const result = validator.validate(value, { fieldName: key });
 
       if (!result.valid) {
@@ -41,6 +49,25 @@ class ObjectSchema {
     }
 
     return isValid ? { valid: true, data: validData } : { valid: false, errors };
+  }
+
+  /**
+   * Validates that the password and password_confirmation fields match.
+   * @param {Object} data - The data object being validated.
+   * @returns {Object} - Validation result:
+   *   - `valid` (boolean): True if the passwords match, false if they don't.
+   *   - `error` (string): Error message if the passwords don't match.
+   */
+  #validatePasswordConfirmation(data) {
+    const password = data['password'];
+    const confirmPassword = data['password_confirmation'];
+
+    // If password_confirmation is provided and doesn't match, return error
+    if (confirmPassword !== undefined && password !== confirmPassword) {
+      return { valid: false, error: 'Password do not match' };
+    }
+    
+    return { valid: true };
   }
 }
 

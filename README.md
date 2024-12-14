@@ -81,6 +81,7 @@ console.log(result); // { valid: true, data: 'almant@gmail.com' }
 ## 4. PasswordValidation
 
 Use `password()` to validate passwords with requirements like minimum length, inclusion of numbers, symbols, etc.
+
 ### Rules:
 
 - containsNumber(): Ensures the password contains at least one numeric digit.
@@ -96,9 +97,9 @@ import v from 'light-validation';
 const password = v.password().min(8)
 .containsNumber()
 .containsSpecialChar()
-.validate('1234567',{fieldName:"Password"});
+.validate('1234567', { fieldName: "Password" });
 
-console.log(result);  //{
+console.log(password);  //{
 //   valid: false,
 //   errors: [
 //     'Password must be at least 8 characters long.',
@@ -106,6 +107,31 @@ console.log(result);  //{
 //   ]
 // }
 ```
+
+Also, if you want to configure your password confirmation, you can create a new schema by adding a `password_confirmation` field. The package will automatically validate it against the `password` field.
+
+```javascript
+import v from 'light-validation';
+
+const schema = v.object({
+  name: v.string().min(4),
+  password: v.password().min(8),
+  password_confirmation: v.password().min(8), // This field is validated against the password field
+});
+
+const result = schema.parseData({
+  name: 'Almant',
+  password: '12345678',
+  password_confirmation: '12345678k',
+});
+
+ console.log(result)  
+//{
+//   valid: false,
+//   errors: { password_confirmation: 'Password do not match' }
+// }
+```
+
 
 ## 5. FileValidation
 
@@ -137,7 +163,6 @@ console.log(image);
 // { valid: true, data: file }
 // Otherwise, it will return errors based on the validation rules.
 ```
-
 ## 6. ObjectSchema
 
 Use `object()` to validate objects against a predefined schema. Each field in the schema is associated with a validator that provides specific validation rules and methods.

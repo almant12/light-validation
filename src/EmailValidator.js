@@ -44,6 +44,7 @@ class EmailValidator {
    * @param {string} errorMessage - Custom error message if validation fails.
    * @returns {Object} - Result of the regex validation.
    */
+  
   #email(value, errorMessage) {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return this.#regex(emailPattern, value, errorMessage);
