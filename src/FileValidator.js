@@ -93,56 +93,73 @@ class FileValidator {
   }
 
   /**
- * Validates the provided string against all applied #rules.
- * Checks if the string satisfies each rule in `#rules`, collecting errors if any.
- * 
- * @param {string|null} value - The string to validate.
- * @param {Object} [options] - Optional parameters for the validation.
- * @param {string} [options.fieldName='value'] - The name of the field being validated. 
- *                                            Defaults to 'value' if not provided. 
- *                                            It helps to customize error messages for specific fields.
- * @returns {Object} - Validation result:
- *   - `valid` (`boolean`): True if all #rules pass, otherwise false.
- *   - `errors` (`string[]`): An array of error messages, if validation fails.
- *   - `data` (`string|null`): The validated string if valid, otherwise null.
+   * Validates the provided file(s) against all applied #rules.
+   * Supports both single file and multiple files.
+   * 
+   * @param {File|File[]|null} files - A single file, array of files, or null.
+   * @param {Object} [options] - Optional parameters for the validation.
+   * @param {string} [options.fieldName='file'] - The name of the field being validated.
+   * @returns {Object} - Validation result:
+   *   - `valid` (`boolean`): True if all files pass, otherwise false.
+   *   - `errors` (`string[]`): An array of error messages, if validation fails.
+   *   - `data` (`File[]|File|null`): The validated file(s) if valid, otherwise null.
    */
-  validate(file,options = {}) {
-    const {fieldName = 'file'} = options;
-    let errors = [];
-    let validData = file;
+  validate(files, options = {}) {
+    const { fieldName = "file" } = options;
+    const errors = [];
+    const validatedFiles = [];
     let isValid = true;
-
-    // If the file is null or empty and null is allowed
-    if (file == null || (Array.isArray(file) && file.length === 0)) {
+  
+    // Check if files are null or empty, and null is allowed
+    if (files == null || (Array.isArray(files) && files.length === 0)) {
       if (this.#allowNull) {
-        return { valid: true, data: null }; // Return null if file is allowed to be null
+        return { valid: true, data: null };
       }
       errors.push(`${fieldName} is required`);
-      isValid = false;
-      validData = null;
-    } else {
-      // Check if the file is an object (assumed to be a file object)
-      if (typeof file !== 'object' || !file.type) {
-        errors.push(`${fieldName} invalid format`);
+      return { valid: false, errors, data: null };
+    }
+  
+    // Normalize single file to an array
+    const fileArray = Array.isArray(files) ? files : [files];
+  
+    // Iterate over each file
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
+  
+      // Validate if the file is a valid object
+      if (typeof file !== "object" || !file.type || !file.size) {
+        errors.push(`${fieldName} ${i} invalid format`);
         isValid = false;
-        validData = null;
-      } else {
-        // Apply rules from the `#rules` array
-        for (let rule of this.#rules) {
-          const result = rule(file,fieldName);
-          if (!result.valid) {
-            errors.push(result.error);
-            isValid = false;
-            validData = null;
-          } else {
-            validData = result.data;
-          }
+        continue;
+      }
+  
+      let fileIsValid = true;
+  
+      // Apply each rule to the current file
+      for (let rule of this.#rules) {
+        const result = rule(file, `${fieldName} ${i}`);
+        if (!result.valid) {
+          errors.push(result.error);
+          fileIsValid = false;
+          isValid = false;
+          break; // Stop checking rules for this file
         }
       }
+  
+      if (fileIsValid) {
+        validatedFiles.push(file); // Add valid file
+      }
     }
-
-    return isValid ? { valid: true, data: validData } : { valid: false, errors };
+  
+    // Determine the return structure: single object or array
+    const finalData =
+      validatedFiles.length === 1 ? validatedFiles[0] : validatedFiles;
+  
+    return isValid
+      ? { valid: true, data: finalData }
+      : { valid: false, errors, data: null };
   }
+  
 }
 
 module.exports = FileValidator;

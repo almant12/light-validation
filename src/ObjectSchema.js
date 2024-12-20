@@ -41,7 +41,7 @@ class ObjectSchema {
       const result = validator.validate(value, { fieldName: key });
 
       if (!result.valid) {
-        errors[key] = result.errors[0];
+        errors[key] = result.errors;
         isValid = false;
       } else {
         validData[key] = result.data;
