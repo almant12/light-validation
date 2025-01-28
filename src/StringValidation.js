@@ -101,6 +101,7 @@ class StringValidator {
     if (isValid) {
       const ruleValidationResult = validateRules(value, fieldName, this.#rules);
       if (!ruleValidationResult.isValid) {
+        isValid = false
         errors.push(...ruleValidationResult.errors);
         validData = null;
       } else {
