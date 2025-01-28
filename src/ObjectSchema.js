@@ -64,7 +64,7 @@ class ObjectSchema {
 
     // If password_confirmation is provided and doesn't match, return error
     if (confirmPassword !== undefined && password !== confirmPassword) {
-      return { valid: false, error: 'Password do not match' };
+      return { valid: false, error: ['Password do not match'] };
     }
     
     return { valid: true };

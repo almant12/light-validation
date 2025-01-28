@@ -14,7 +14,20 @@ class BooleanValidator {
       this.#allowNull = true; // Enable nullable behavior
       return this; // Return the instance for chaining
     }
-  
+
+     // Private method for parsing strings as booleans
+  #parseBoolean(value) {
+    if (typeof value === 'string') {
+      const lowerValue = value.toLowerCase();
+      if (lowerValue === 'true' || lowerValue === '1') {
+        return true;
+      } else if (lowerValue === 'false' || lowerValue === '0') {
+        return false;
+      }
+    }
+    return value; // Return the original value if not a parsable string
+  }
+
     /**
      * Validates the provided boolean value against all applied rules.
      * 
@@ -29,8 +42,10 @@ class BooleanValidator {
     validate(value, options = {}) {
       const { fieldName = 'value' } = options;
       let errors = [];
-      let validData = value;
       let isValid = true;
+
+      // Parse value to boolean if it's a string
+      value = this.#parseBoolean(value);
   
       if (value === null) {
         if (this.#allowNull) {
@@ -38,14 +53,12 @@ class BooleanValidator {
         }
         errors.push(`${fieldName} is required`);
         isValid = false;
-        validData = null;
       } else if (typeof value !== 'boolean') {
         errors.push(`${fieldName} must be a boolean`);
         isValid = false;
-        validData = null;
       }
   
-      return isValid ? { valid: true, data: validData } : { valid: false, errors };
+      return isValid ? { valid: true, data: value } : { valid: false, errors };
     }
   }
   

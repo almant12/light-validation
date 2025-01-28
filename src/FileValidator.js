@@ -1,3 +1,5 @@
+const ffmpeg = require('fluent-ffmpeg')
+const {mimeTypes} = require('./until/hepler')
 /**
  * Class for validating file uploads with customizable rules.
  * Supports file type, size, and required presence validation.
@@ -26,18 +28,7 @@ class FileValidator {
    * @param {string} [options.message] - Custom error message.
    */
   type(allowedExtensions, options = {}) { 
-    // Map common extensions to MIME types
-    const mimeTypes = {
-      jpg: 'image/jpg',
-      jpeg: 'image/jpeg',
-      png: 'image/png',
-      gif: 'image/gif',
-      pdf: 'application/pdf',
-      txt: 'text/plain',
-      doc: 'application/msword',
-      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    };
-  
+
     // Validate extensions and collect MIME types
     const allowedMimeTypes = [];
     const invalidExtensions = [];
@@ -70,6 +61,43 @@ class FileValidator {
     });
   
     return this; // Enable chaining
+  }
+
+  video(maxMin,options = {}){
+    const maxDurationInSeconds = maxDurationInMinutes * 60; 
+    const message = `Video is too long. Please upload a video less than ${maxMin} min`;
+
+    this.#rules.push((file,fieldName)=>{
+      if(file.type.startsWith('video/')){
+        return new Promise((resolve,reject)=>{
+          ffmpeg.ffprobe(file.path,(err,metadata)=>{
+            if(err){
+              resolve({
+                valid: false,
+                error: `${fieldName} Unable to process video file`
+              });
+
+              return ;
+            }
+
+            const duration = metadata.format.duration / 60
+            if(duration > maxDurationInSeconds){
+              resolve({
+                valid: false,
+                error: message
+              })
+            }else{
+              resolve({
+                valid: true,
+                data: file
+              })
+            }
+          })
+        })
+      }
+    });
+
+    return this;
   }
   
 
