@@ -1,5 +1,4 @@
-const ffmpeg = require('fluent-ffmpeg')
-const {mimeTypes} = require('./until/hepler')
+const {mimeTypes} = require('./until/helper')
 /**
  * Class for validating file uploads with customizable rules.
  * Supports file type, size, and required presence validation.
@@ -62,44 +61,6 @@ class FileValidator {
   
     return this; // Enable chaining
   }
-
-  video(maxMin,options = {}){
-    const maxDurationInSeconds = maxDurationInMinutes * 60; 
-    const message = `Video is too long. Please upload a video less than ${maxMin} min`;
-
-    this.#rules.push((file,fieldName)=>{
-      if(file.type.startsWith('video/')){
-        return new Promise((resolve,reject)=>{
-          ffmpeg.ffprobe(file.path,(err,metadata)=>{
-            if(err){
-              resolve({
-                valid: false,
-                error: `${fieldName} Unable to process video file`
-              });
-
-              return ;
-            }
-
-            const duration = metadata.format.duration / 60
-            if(duration > maxDurationInSeconds){
-              resolve({
-                valid: false,
-                error: message
-              })
-            }else{
-              resolve({
-                valid: true,
-                data: file
-              })
-            }
-          })
-        })
-      }
-    });
-
-    return this;
-  }
-  
 
   /**
    * Adds a rule to validate the file size.
