@@ -40,7 +40,7 @@ function validateType(value, fieldName, isArray) {
     let validData = value;
   
     for (let rule of rules) {
-      const result = rule(value.trim(), fieldName);
+      const result = rule(value, fieldName);
       if (!result.valid) {
         errors.push(result.error);
         isValid = false;

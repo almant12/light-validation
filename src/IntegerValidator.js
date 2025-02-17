@@ -79,44 +79,49 @@ class IntegerValidator {
  *   - `errors` (`string[]`): An array of error messages, if validation fails.
  *   - `data` (`string|null`): The validated string if valid, otherwise null.
    */
-  validate(value,options = {}) {
-    const {fieldName = 'value'} = options;
+   validate(value, options = {}) {
+    const { fieldName = 'value' } = options;
     let errors = [];
     let validData = value;
     let isValid = true;
-  
-    // Convert string values to number
-    if (typeof value === 'string') {
-      value = parseInt(value, 10); // Try converting string to integer
-    }
-  
-    if (value === null) {
+
+    // Check if value is null or empty
+    if (value == null || value.length === 0) {
       if (this.#allowNull) {
-        return { valid: true, data: null };
-      } else {
-        errors.push(`${fieldName} is required`);
-        isValid = false;
-        validData = null;
+        return { valid: true, data: null }; // Pass validation for null/empty if nullable
       }
-    } else if (typeof value !== 'number' || !Number.isInteger(value)) {
-      errors.push(`${fieldName} must be a integer`);
+      errors.push(`${fieldName} is required`);
       isValid = false;
       validData = null;
     } else {
-      for (let rule of this.#rules) {
-        const result = rule(value,fieldName);
-        if (!result.valid) {
-          errors.push(result.error);
-          isValid = false;
-          validData = null;
-        } else {
-          validData = result.value;
+      // Convert string to number if needed, while still checking for other errors
+      if (typeof value === 'string') {
+        value = parseInt(value, 10); // Try converting string to integer
+      }
+
+      // Validate if value is a number and an integer
+      if (typeof value !== 'number' || !Number.isInteger(value)) {
+        errors.push(`${fieldName} must be an integer`);
+        isValid = false;
+        validData = null;
+      } else {
+        // Additional rules
+        for (let rule of this.#rules) {
+          const result = rule(value);
+          if (!result.valid) {
+            errors.push(result.error);
+            isValid = false;
+            validData = null;
+          } else {
+            validData = result.value;
+          }
         }
       }
     }
-  
+
     return isValid ? { valid: true, data: validData } : { valid: false, errors };
-  }
+}
+
   
 }
 
